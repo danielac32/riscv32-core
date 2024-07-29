@@ -3,7 +3,7 @@
 #PREFIX:=riscv64-unknown-elf-
 #CFLAGS:=-I/usr/include
 
-PREFIX := riscv64-unknown-elf-
+PREFIX := riscv32-unknown-elf-
 CFLAGS := -march=rv32ima -mabi=ilp32
 LDFLAGS := -T linker.ld  
 
