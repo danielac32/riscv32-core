@@ -89,6 +89,7 @@ static inline unsigned int r_mhartid()
 static inline unsigned int r_mstatus()
 {
   unsigned int x;
+  asm volatile(".option arch, +zicsr");
   asm volatile("csrr %0, mstatus"
                : "=r"(x));
   return x;
@@ -230,6 +231,7 @@ static inline unsigned int get_cyc_count() {
 static inline unsigned int csr_get_time(void)
 {
     unsigned int value;
+    asm volatile(".option arch, +zicsr");
     asm volatile ("csrr %0, time" : "=r" (value) : );
     return value;
 }
@@ -333,7 +335,7 @@ struct irq_context * exceptionHandler(struct irq_context *ctx)
         switch (cause_code)
 		    {
 		    case 3:
-            kputs("software interruption\n");
+            kputs("software interruption! \n");
 		      //kprintf("software interruption!\n");
 		      //ctx->pc =(uint32)&resched;
 		      //ctx->pc += 4;
@@ -452,7 +454,7 @@ for (int i = 1; i <= num; ++i)
 
 int main(){
  
-   kputs("hola como estas \n");
+   kputs("daniel quintero \n");
    asus(20);
    asus2(20);
    

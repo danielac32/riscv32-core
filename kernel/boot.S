@@ -8,7 +8,7 @@
 .global enable
 .global disable
 .global restore
-
+.option arch, +zicsr
 
 .align 4
 _start:
