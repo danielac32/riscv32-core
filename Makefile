@@ -13,6 +13,9 @@ run2:
 run:
 	./riscv kernel/compile.bin
 
+run3:
+	./riscv xinu/kernel.bin
+
 
 
 #riscv64-unknown-elf-objdump -D   kernel/compile.elf

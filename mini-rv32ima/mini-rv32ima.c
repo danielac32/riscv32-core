@@ -281,6 +281,8 @@ static void HandleOtherCSRWrite( uint8_t * image, uint16_t csrno, uint32_t value
 	else if( csrno == 0x139 )
 	{
 		putchar( value ); fflush( stdout );
+	}else if(csrno==0x402){
+		putchar( value ); fflush( stdout );
 	}
 }
 

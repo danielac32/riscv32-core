@@ -1,0 +1,35 @@
+{
+    "child": {
+        "child1": {
+            "directory": "/home/daniel/riscv32-core/kernel",
+            "height": 540,
+            "profile": "2b7c4080-0ddd-46c5-8f23-563fd3ba789d",
+            "readOnly": false,
+            "synchronizedInput": true,
+            "type": "Terminal",
+            "uuid": "44fd2875-5d8a-4744-b326-40bd4e0baac9",
+            "width": 564
+        },
+        "child2": {
+            "directory": "/home/daniel/riscv32-core",
+            "height": 540,
+            "profile": "2b7c4080-0ddd-46c5-8f23-563fd3ba789d",
+            "readOnly": false,
+            "synchronizedInput": true,
+            "type": "Terminal",
+            "uuid": "51e4866c-0faa-4401-bc08-94d431a20b21",
+            "width": 564
+        },
+        "orientation": 0,
+        "position": 49,
+        "ratio": 0.499557130203720112,
+        "type": "Paned"
+    },
+    "height": 540,
+    "name": "${title}",
+    "synchronizedInput": false,
+    "type": "Session",
+    "uuid": "f7ef53e8-8903-4748-91c7-fdd1d37b358c",
+    "version": "1.0",
+    "width": 1129
+}

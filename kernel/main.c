@@ -354,7 +354,7 @@ struct irq_context * exceptionHandler(struct irq_context *ctx)
               //sys_time += 1;
               //ctx->pc = (uint32)&clkhandler;
 		       w_mie(r_mie() | MIE_MTIE);*/
-            ctx->pc = &clkhandler;
+            ctx->pc = (unsigned int)&clkhandler;
 		      break;
 		    case 11:
 		      //kprintf("external interruption!\n");
