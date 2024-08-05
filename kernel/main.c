@@ -12,7 +12,7 @@
 volatile uint64_t *mtimecmp = (uint64_t *)(CLINT_BASE_ADDR + CLINT_MTIMECMP_OFFSET);
 volatile uint64_t *mtime = (uint64_t *)(CLINT_BASE_ADDR + CLINT_MTIME_OFFSET);
 
-
+#define INTERVALCLOCK 100
 
 #define kbhit() *(unsigned char*)0x10000005
 #define readbyte() *(unsigned char*)0x10000000
@@ -294,6 +294,65 @@ static inline __attribute__((always_inline)) void irq_restore(
 }
 
 
+#define reg_t unsigned int // RISCV32: register is 32bits
+#define MAX_TASK 10
+#define STACK_SIZE 1024
+
+
+struct context {
+  reg_t ra;
+  reg_t sp;
+
+  // callee-saved
+  reg_t s0;
+  reg_t s1;
+  reg_t s2;
+  reg_t s3;
+  reg_t s4;
+  reg_t s5;
+  reg_t s6;
+  reg_t s7;
+  reg_t s8;
+  reg_t s9;
+  reg_t s10;
+  reg_t s11;
+};
+
+uint8_t task_stack[MAX_TASK][STACK_SIZE];
+struct context ctx_os;
+struct context ctx_tasks[MAX_TASK];
+struct context *ctx_now;
+int taskTop=0;  // total number of task
+
+
+extern void sys_switch(struct context *ctx_old, struct context *ctx_new);
+
+// create a new task
+int task_create(void (*task)(void))
+{
+  int i=taskTop++;
+  ctx_tasks[i].ra = (reg_t) task;
+  ctx_tasks[i].sp = (reg_t) &task_stack[i][STACK_SIZE-1];
+  return i;
+}
+
+// switch to task[i]
+void task_go(int i) {
+  ctx_now = &ctx_tasks[i];
+  sys_switch(&ctx_os, &ctx_tasks[i]);
+}
+
+// switch back to os
+void task_os() {
+  struct context *ctx = ctx_now;
+  ctx_now = &ctx_os;
+  sys_switch(ctx, &ctx_os);
+}
+
+
+
+
+
 void init_timer(uint64_t interval) {
     uint64_t current_time = *mtime;
     *mtimecmp = current_time + interval;
@@ -319,8 +378,9 @@ void clkupdate(uint64_t cycles)
 
 
 void clkhandler(void){
-  clkupdate(10000);
-  kputs("timer ok\n");
+  clkupdate(INTERVALCLOCK);
+  task_os();
+  //kputs("timer ok\n");
 }
 
 struct irq_context * exceptionHandler(struct irq_context *ctx)
@@ -354,7 +414,10 @@ struct irq_context * exceptionHandler(struct irq_context *ctx)
               //sys_time += 1;
               //ctx->pc = (uint32)&clkhandler;
 		       w_mie(r_mie() | MIE_MTIE);*/
+            asm volatile(".option arch, +zicsr");
+            w_mie(~((~r_mie()) | (1 << 7)));
             ctx->pc = (unsigned int)&clkhandler;
+            w_mie(r_mie() | MIE_MTIE);
 		      break;
 		    case 11:
 		      //kprintf("external interruption!\n");
@@ -446,9 +509,32 @@ for (int i = 1; i <= num; ++i)
 	kputs("\n");
 }
 }
+void lib_delay(volatile int count)
+{
+  count *= 50000;
+  while (count--);
+}
 
 
+void user_task0(void)
+{
+  kputs("Task0: Created!\n");
+  while (1)
+  {
+    kputs("Task0: Running...\n");
+    
+  }
+}
 
+void user_task1(void)
+{
+  kputs("Task1: Created!\n");
+  while (1)
+  {
+    kputs("Task1: Running...\n");
+     
+  }
+}
 
 
 
@@ -460,13 +546,28 @@ int main(){
    
    kputs("riscv emulator\n");
   //init_timer(1000000);
-
+ task_create(&user_task0);
+  task_create(&user_task1);
     // enable machine-mode interrupts.
   w_mstatus(r_mstatus() | MSTATUS_MIE);
 
   w_mie(r_mie() | MIE_MSIE);
   w_mie(r_mie() | MIE_MTIE);
-  init_timer(1000);
+  init_timer(INTERVALCLOCK);
+
+ 
+
+  int current_task = 0;
+  while (1)
+  {
+    ///kputs("OS: Activate next task\n");
+    task_go(current_task);
+    //kputs("OS: Back to OS\n");
+    current_task = (current_task + 1) % taskTop; // Round Robin Scheduling
+    //kputs("\n");
+  }
+
+
  // timel=1;
    //soft_trap();
 

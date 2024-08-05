@@ -192,3 +192,4 @@ restore_return:
     andi a0, a0, MSTATUS_MIE
     ret
     .endfunc
+

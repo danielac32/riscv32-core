@@ -1,7 +1,7 @@
 {
     "child": {
         "child1": {
-            "directory": "/home/daniel/riscv32-core/kernel",
+            "directory": "/home/daniel/riscv32-core/xinu",
             "height": 540,
             "profile": "2b7c4080-0ddd-46c5-8f23-563fd3ba789d",
             "readOnly": false,

@@ -3,7 +3,7 @@ ENTRY( _start )
 
 
 
-__stack_size = 4096;
+__stack_size = 8192;
 MEMORY {
   RAM (rwx)  : ORIGIN = 0x80000000,  LENGTH = 100K
 }

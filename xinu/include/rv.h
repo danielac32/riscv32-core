@@ -189,9 +189,11 @@
     asm volatile("csrw mip, %0" : : "r"(x))
 
 #define get_cyc_count() ({ \
+    asm volatile(".option arch, +zicsr"); \
     unsigned int ccount; \
     asm volatile("csrr %0, 0xC00" : "=r"(ccount)); \
     ccount; \
 })
 
 #endif // RISCV_MACROS_H
+ 

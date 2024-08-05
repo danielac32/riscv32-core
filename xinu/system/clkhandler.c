@@ -4,10 +4,17 @@
 //#include <string.h>
  
 #include <xinu.h>
+#include <rv.h>
+
+
+ 
+
 
 void clkhandler(void){
-  clkupdate(10000);
-  //kprintf("timer ok\n");
+  clkupdate(0xffff);
+ // timel=0xfff;
+ 
+ // asus(20);//kprintf("timer ok\n");
   count1000++;
 
 	/* After 1 sec, increment clktime */
@@ -17,6 +24,8 @@ void clkhandler(void){
 		count1000 = 0;
 
 	}
+
+	#if 1
     //if(ready_preemptive){
 		if(!isempty(sleepq)) {
 			/* sleepq nonempty, decrement the key of */
@@ -33,6 +42,7 @@ void clkhandler(void){
 			resched();
 		}
     //}
+    #endif
 
   
 }

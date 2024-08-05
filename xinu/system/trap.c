@@ -54,11 +54,19 @@ struct irq_context * exceptionHandler(struct irq_context *ctx)
         switch (cause_code)
 		    {
 		    case 3:
-		      //kprintf("software interruption!\n");
+		      kprintf("software interruption!\n");
 		      ctx->pc += 4;
 		      break;
 		    case 7:
-                 ctx->pc = (unsigned int)&clkhandler;
+		    	{
+		    		//asm volatile(".option arch, +zicsr");
+		    		//w_mie(~((~r_mie()) | (1 << 7)));
+		    		uint32 irq=disable();
+		    		ctx->pc = (unsigned int)&clkhandler;
+		    		restore(irq);
+		    		//w_mie(r_mie() | MIE_MTIE);
+
+		    	}
 		      break;
 		    case 11:
 		         kprintf("external interruption!\n");

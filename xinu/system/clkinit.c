@@ -15,7 +15,7 @@
 /* clkinit.c - clkinit STM32 */
 
 #include <xinu.h>
-
+#include <rv.h>
 uint32	clktime;		/* Seconds since boot			*/
 uint32  count1000;              /* ms since last clock tick             */
 qid16	sleepq;			/* Queue of sleeping processes		*/
@@ -35,6 +35,8 @@ void clkinit(void)
 	preempt = QUANTUM;	/* Set the preemption time		*/
 	clktime = 0;		/* Start counting seconds		*/
     count1000 = 0;
-    init_timer(10000);
+   //timel=0xfffff;
+  //timeh=0;
+    init_timer(0xffff);
 	return;
 }

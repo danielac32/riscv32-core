@@ -13,10 +13,10 @@ uint64_t   cycleCount(void) {
 
 
 void delay(uint32_t usec) {
-     uint64_t now = cycleCount();
+     uint64_t now = get_cyc_count();
       //then = now + usec * clockspeed_hz / (usec/sec)
      uint64_t then = now + 1 * usec;
-     while (cycleCount() < then)
+     while (get_cyc_count() < then)
          asm volatile("add x0,x0,x0");
  }
 

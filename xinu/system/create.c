@@ -45,8 +45,8 @@ pid32	create(
 		ssize = MINSTK;
 	ssize = (uint32) roundew(ssize);
 	
-	//if (((saddr = (uint32 *)getstk(ssize)) ==
-	if (((saddr = (uint32 *)malloc(ALIGN(4, ssize))) ==
+	if (((saddr = (uint32 *)getstk(ssize)) ==
+	//if (((saddr = (uint32 *)malloc(ALIGN(4, ssize))) ==
 	    (uint32 *)SYSERR ) ||
 	    (pid=newpid()) == SYSERR || priority < 1 ) {
 		kprintf("create error %s\n",name);
